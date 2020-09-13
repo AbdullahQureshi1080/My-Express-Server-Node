@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/AbdullahQureshi1080/my-express-server-node/issues"
   },
-  "homepage": "https://github.com/AbdullahQureshi1080/my-express-server-node#readme"
+  "homepage": "https://github.com/AbdullahQureshi1080/my-express-server-node#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
