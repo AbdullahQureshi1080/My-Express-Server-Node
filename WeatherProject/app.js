@@ -1,26 +1,50 @@
 const express = require("express");
 const https = require("https");
-
+const bodyParser = require("body-parser");
 const app = express();
 
-// Get Data from external server and parse it using JSON parse and logging it into the console. 
+app.use(bodyParser.urlencoded({ extended: true }));
+// Get Data from external server and parse it using JSON parse and logging it into the console.
 
 app.get("/", function (req, res) {
-  const url =
-    "https://api.openweathermap.org/data/2.5/weather?q=London&appid=df43c8df60b436f696e34a10a8b0664d&units=metric";
+  res.sendFile(__dirname + "/index.html");
+});
+
+app.post("/", function (req, res) {
+  const cityName = req.body.cityName;
+  const query = cityName;
+  const API_KEY = "df43c8df60b436f696e34a10a8b0664d";
+  const units = "metric";
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${API_KEY}&units=${units}`;
 
   https.get(url, function (response) {
     console.log(response.statusCode);
     response.on("data", function (data) {
       const weatherData = JSON.parse(data);
-      const temp = weatherData.main.temp;
-      const desc = weatherData.weather[0].description;
-      const icon = weatherData.weather[0].icon;
-      console.log(desc);
+      const weatherTemp = weatherData.main.temp;
+      const weatherdescription = weatherData.weather[0].description;
+      const weatherIcon = weatherData.weather[0].icon;
+      const imageUrl =
+        "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
+      //   console.log(desc);
+      res.write(
+        "<h1>The temp in" +
+          " " +
+          cityName +
+          " " +
+          "is" +
+          " " +
+          weatherTemp +
+          " " +
+          "degress Celcius.</h1>"
+      );
+      res.write(
+        "<h4>The weather is currently" + " " + weatherdescription + "</h4>"
+      );
+      res.write("<img src = " + imageUrl + ">");
+      res.send();
     });
   });
-
-  res.send("server is up and running.");
 });
 
 app.listen(3000, function () {
